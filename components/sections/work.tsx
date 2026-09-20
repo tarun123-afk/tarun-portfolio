@@ -6,6 +6,16 @@ import { Reveal } from "@/components/ui/reveal"
 import { toggleVideoSound } from "@/lib/audio"
 import { works, type WorkItem } from "@/lib/site"
 
+/**
+ * True only for devices with a real mouse/trackpad. On touch devices the
+ * browser simulates "mouseenter" immediately before "click", which raced
+ * against the tap-to-toggle handler below and made taps appear to do
+ * nothing (a ghost click) — so the hover-preview must never run there.
+ */
+function hasRealHover() {
+  return typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches
+}
+
 function PublishedCard({ work }: { work: WorkItem }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
@@ -38,10 +48,12 @@ function PublishedCard({ work }: { work: WorkItem }) {
         className="relative aspect-video cursor-pointer bg-black"
         onClick={togglePlay}
         onMouseEnter={() => {
+          if (!hasRealHover()) return
           const v = videoRef.current
           if (v && v.paused) void v.play()
         }}
         onMouseLeave={() => {
+          if (!hasRealHover()) return
           const v = videoRef.current
           // Leave a video that the visitor has unmuted alone — they're watching it.
           if (v && !v.paused && v.muted) v.pause()
