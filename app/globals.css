@@ -142,6 +142,13 @@
   background: hsl(var(--primary) / 0.1);
 }
 
+/* ---------- Tap feedback ---------- */
+/* Removes the grey flash Android/Chrome draws on tap, which briefly hides
+   the play icon and can read as the tap having done nothing. */
+a, button, video, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ---------- Focus + selection ---------- */
 ::selection {
   background: hsl(var(--primary));

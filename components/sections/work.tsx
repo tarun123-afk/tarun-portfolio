@@ -6,16 +6,6 @@ import { Reveal } from "@/components/ui/reveal"
 import { toggleVideoSound } from "@/lib/audio"
 import { works, type WorkItem } from "@/lib/site"
 
-/**
- * True only for devices with a real mouse/trackpad. On touch devices the
- * browser simulates "mouseenter" immediately before "click", which raced
- * against the tap-to-toggle handler below and made taps appear to do
- * nothing (a ghost click) — so the hover-preview must never run there.
- */
-function hasRealHover() {
-  return typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches
-}
-
 function PublishedCard({ work }: { work: WorkItem }) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
@@ -43,21 +33,10 @@ function PublishedCard({ work }: { work: WorkItem }) {
   }
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <article className="group overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 [@media(hover:hover)]:hover:-translate-y-1 [@media(hover:hover)]:hover:shadow-xl">
       <div
-        className="relative aspect-video cursor-pointer bg-black"
+        className="relative aspect-video cursor-pointer touch-manipulation bg-black"
         onClick={togglePlay}
-        onMouseEnter={() => {
-          if (!hasRealHover()) return
-          const v = videoRef.current
-          if (v && v.paused) void v.play()
-        }}
-        onMouseLeave={() => {
-          if (!hasRealHover()) return
-          const v = videoRef.current
-          // Leave a video that the visitor has unmuted alone — they're watching it.
-          if (v && !v.paused && v.muted) v.pause()
-        }}
       >
         <video
           ref={videoRef}
@@ -85,7 +64,7 @@ function PublishedCard({ work }: { work: WorkItem }) {
           type="button"
           onClick={toggleSound}
           aria-label={muted ? "Unmute video" : "Mute video"}
-          className="absolute bottom-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition-colors hover:bg-black/75"
+          className="absolute bottom-3 right-3 inline-flex h-9 w-9 touch-manipulation items-center justify-center rounded-full bg-black/55 text-white backdrop-blur transition-colors hover:bg-black/75"
         >
           {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
         </button>
