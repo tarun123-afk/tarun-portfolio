@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Instagram, Menu, X } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { site } from "@/lib/site"
 
@@ -40,7 +41,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-20 max-w-[1280px] items-center justify-between px-6 md:px-12">
         <Link href="/" className="flex items-center gap-3" aria-label="Tarun — home">
-          <img src="/T.png" alt="" className="h-8 w-auto" />
+          <Logo className="h-9" />
           <span className="text-lg font-semibold tracking-tight">{site.name}</span>
         </Link>
 

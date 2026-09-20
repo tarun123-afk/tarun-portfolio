@@ -12,11 +12,12 @@ export const site = {
 
   instagram: {
     main: { handle: "@tarun66985", url: "https://instagram.com/tarun66985", label: "Personal" },
-    work: { handle: "@txrun.ae", url: "https://instagram.com/txrun.ae", label: "Edits & Motion" },
+    work: { handle: "@txrun_ae", url: "https://instagram.com/txrun_ae", label: "Edits & Motion" },
   },
 
   /** Tools you actually work in. */
   tools: [
+    "Video Editor",
     "After Effects",
     "DaVinci Resolve",
     "CapCut",
@@ -43,7 +44,7 @@ export interface WorkItem {
   video?: string
   poster?: string
   /** 4:5 for vertical/reels, 16:9 for landscape. Drives the card frame. */
-  ratio?: "4/5" | "16/9" | "9/16"
+  ratio?: "4/5" | "1/1" | "16/9" | "9/16"
 }
 
 export const works: WorkItem[] = [
@@ -59,17 +60,64 @@ export const works: WorkItem[] = [
     poster: "/images/apple-watch-poster.jpg",
     ratio: "4/5",
   },
-  // ---------------------------------------------------------------------
-  // 5 reserved slots. When a video is ready:
-  //   1. set status: "published"
-  //   2. add video: "/videos/your-file.mp4" (or a hosted URL — see README)
-  //   3. add poster: "/images/your-poster.jpg"
-  //   4. fill in the real title / type / description / tools
-  // Until then they render as clean "in production" slots.
-  // ---------------------------------------------------------------------
-  { id: "slot-2", title: "", type: "", description: "", tools: [], status: "upcoming", ratio: "4/5" },
-  { id: "slot-3", title: "", type: "", description: "", tools: [], status: "upcoming", ratio: "4/5" },
-  { id: "slot-4", title: "", type: "", description: "", tools: [], status: "upcoming", ratio: "4/5" },
-  { id: "slot-5", title: "", type: "", description: "", tools: [], status: "upcoming", ratio: "4/5" },
-  { id: "slot-6", title: "", type: "", description: "", tools: [], status: "upcoming", ratio: "4/5" },
+  {
+    id: "espresso",
+    title: "Espresso — Motion Graphics & Visual Design",
+    type: "Lyric edit · motion graphics",
+    description:
+      "A dynamic motion graphics piece built around the song's visual identity, combining bold typography, product-focused composition, smooth transitions, and rhythmic animation to create an engaging visual presentation.",
+    tools: ["After Effects", "Motion Design", "Typography"],
+    status: "published",
+    video: "/videos/espresso-lyric-edit.mp4",
+    poster: "/images/espresso-lyric-edit-poster.jpg",
+    ratio: "1/1",
+  },
+  {
+    id: "porsche-gt3rs",
+    title: "Porsche 911 GT3 RS — Cinematic Automotive Edit",
+    type: "Automotive edit · cinematic",
+    description:
+      "A cinematic automotive edit focused on the Porsche 911 GT3 RS, combining dynamic pacing, detailed visual composition, transitions, sound design, and colour treatment to create a high-impact presentation.",
+    tools: ["DaVinci Resolve", "After Effects", "Sound Design"],
+    status: "published",
+    video: "/videos/porsche-911-gt3-rs.mp4",
+    poster: "/images/porsche-911-gt3-rs-poster.jpg",
+    ratio: "16/9",
+  },
+  {
+    id: "rdr2",
+    title: "Cinematic RDR2 Character Edit — Visual Storytelling",
+    type: "Character edit · visual storytelling",
+    description:
+      "A cinematic character-focused edit using dramatic pacing, monochrome visuals, typography, transitions, and carefully timed cuts to create a dark and atmospheric visual style.",
+    tools: ["After Effects", "DaVinci Resolve", "Typography"],
+    status: "published",
+    video: "/videos/rdr2-character-edit.mp4",
+    poster: "/images/rdr2-character-edit-poster.jpg",
+    ratio: "16/9",
+  },
+  {
+    id: "seamless-loop",
+    title: "Seamless Loop — Motion Graphics Animation",
+    type: "Looping animation · motion graphics",
+    description:
+      "A seamless looping animation created with clean geometric forms, smooth movement, and continuous transitions. Designed to maintain visual flow while creating a polished and repeatable motion graphic.",
+    tools: ["After Effects", "Motion Design"],
+    status: "published",
+    video: "/videos/seamless-loop.mp4",
+    poster: "/images/seamless-loop-poster.jpg",
+    ratio: "16/9",
+  },
+  {
+    id: "attack-on-titan",
+    title: "Attack on Titan — Cinematic Typography Edit",
+    type: "Anime edit · typography & compositing",
+    description:
+      "A cinematic anime edit combining typography, motion graphics, compositing, transitions, and atmospheric visuals to enhance the intensity and storytelling of the original footage.",
+    tools: ["After Effects", "Typography", "Motion Design"],
+    status: "published",
+    video: "/videos/attack-on-titan-typography.mp4",
+    poster: "/images/attack-on-titan-typography-poster.jpg",
+    ratio: "16/9",
+  },
 ]

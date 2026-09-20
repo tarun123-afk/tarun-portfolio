@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { ArrowDown, ArrowUpRight, Instagram, Volume2, VolumeX } from "lucide-react"
 import { useRef, useState } from "react"
+import { toggleVideoSound } from "@/lib/audio"
 import { site, works } from "@/lib/site"
 
 const featured = works.find((w) => w.status === "published")
@@ -12,11 +13,10 @@ export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [muted, setMuted] = useState(true)
 
-  const toggleSound = () => {
+  const toggleSound = async () => {
     const v = videoRef.current
     if (!v) return
-    v.muted = !v.muted
-    setMuted(v.muted)
+    setMuted(await toggleVideoSound(v))
   }
 
   return (
@@ -174,7 +174,7 @@ export function Hero() {
 
       {/* ---------------- Tool marquee ---------------- */}
       <div className="marquee-mask border-y border-border py-5">
-        <div className="marquee-track gap-10 md:gap-16">
+        <div className="marquee-track">
           {[0, 1].map((dup) => (
             <div key={dup} className="flex shrink-0 items-center gap-10 pr-10 md:gap-16 md:pr-16" aria-hidden={dup === 1}>
               {site.tools.map((tool) => (

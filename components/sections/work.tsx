@@ -1,8 +1,9 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { Clapperboard, Play, Volume2, VolumeX } from "lucide-react"
+import { Play, Volume2, VolumeX } from "lucide-react"
 import { Reveal } from "@/components/ui/reveal"
+import { toggleVideoSound } from "@/lib/audio"
 import { works, type WorkItem } from "@/lib/site"
 
 function PublishedCard({ work }: { work: WorkItem }) {
@@ -10,37 +11,40 @@ function PublishedCard({ work }: { work: WorkItem }) {
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
 
+  /** Landscape clips fill the frame; vertical/square ones fit inside it uncropped. */
+  const fit = work.ratio === "16/9" || !work.ratio ? "object-cover" : "object-contain"
+
   const togglePlay = () => {
     const v = videoRef.current
     if (!v) return
     if (v.paused) {
       void v.play()
-      setPlaying(true)
     } else {
       v.pause()
-      setPlaying(false)
     }
   }
 
-  const toggleSound = (e: React.MouseEvent) => {
+  const toggleSound = async (e: React.MouseEvent) => {
     e.stopPropagation()
     const v = videoRef.current
     if (!v) return
-    v.muted = !v.muted
-    setMuted(v.muted)
+    if (v.paused) void v.play()
+    setMuted(await toggleVideoSound(v))
   }
 
   return (
     <article className="group overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div
-        className="relative aspect-[4/5] cursor-pointer bg-black"
+        className="relative aspect-video cursor-pointer bg-black"
         onClick={togglePlay}
         onMouseEnter={() => {
           const v = videoRef.current
-          if (v && v.paused) {
-            void v.play()
-            setPlaying(true)
-          }
+          if (v && v.paused) void v.play()
+        }}
+        onMouseLeave={() => {
+          const v = videoRef.current
+          // Leave a video that the visitor has unmuted alone — they're watching it.
+          if (v && !v.paused && v.muted) v.pause()
         }}
       >
         <video
@@ -51,9 +55,10 @@ function PublishedCard({ work }: { work: WorkItem }) {
           muted
           playsInline
           preload="metadata"
-          className="h-full w-full object-cover"
+          className={`h-full w-full ${fit}`}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
+          onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
         />
 
         {!playing && (
@@ -93,36 +98,8 @@ function PublishedCard({ work }: { work: WorkItem }) {
   )
 }
 
-function ReservedCard({ index }: { index: number }) {
-  return (
-    <article className="overflow-hidden rounded-2xl border border-dashed border-border bg-card/40">
-      <div className="relative flex aspect-[4/5] items-center justify-center bg-secondary/40">
-        <div className="flex flex-col items-center gap-3 px-6 text-center">
-          <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background/70">
-            <Clapperboard className="h-5 w-5 text-muted-foreground" />
-          </span>
-          <p className="font-mono text-2xl text-muted-foreground/70">
-            {String(index).padStart(2, "0")}
-          </p>
-          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">In production</p>
-        </div>
-      </div>
-      <div className="p-5">
-        <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Next release</p>
-        <h3 className="mt-2 text-lg font-semibold leading-snug text-muted-foreground">
-          Project slot {String(index).padStart(2, "0")}
-        </h3>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          A finished edit is queued for this slot and goes live once it&apos;s uploaded.
-        </p>
-      </div>
-    </article>
-  )
-}
-
 export function Work() {
   const published = works.filter((w) => w.status === "published")
-  let reservedIndex = published.length
 
   return (
     <section id="work" className="scroll-mt-28 py-20 md:py-28">
@@ -136,20 +113,15 @@ export function Work() {
               </h2>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              {published.length} published · {works.length - published.length} more being uploaded. Full
-              feed lives on Instagram.
+              {published.length} published pieces. Full feed lives on Instagram.
             </p>
           </div>
         </Reveal>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {works.map((work, i) => (
+          {published.map((work, i) => (
             <Reveal key={work.id} delay={(i % 3) * 90}>
-              {work.status === "published" ? (
-                <PublishedCard work={work} />
-              ) : (
-                <ReservedCard index={++reservedIndex} />
-              )}
+              <PublishedCard work={work} />
             </Reveal>
           ))}
         </div>

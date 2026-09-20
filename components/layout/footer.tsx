@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Instagram, Mail } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 import { site } from "@/lib/site"
 
 const footerLinks = [
@@ -19,7 +20,7 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-3">
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-3">
-              <img src="/T.png" alt="" className="h-8 w-auto" />
+              <Logo className="h-9" />
               <span className="text-xl font-semibold tracking-tight">{site.name}</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">

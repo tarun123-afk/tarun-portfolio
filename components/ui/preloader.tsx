@@ -82,11 +82,13 @@ export function Preloader() {
       />
 
       <div className="relative flex flex-col items-center">
-        <img
-          src="/T.png"
-          alt=""
-          className="preloader-logo h-20 w-auto md:h-24 dark:invert-0 invert-[0.08]"
-        />
+        <span className="preloader-logo inline-flex aspect-video h-20 items-center justify-center md:h-24">
+          <img
+            src="/T.png"
+            alt=""
+            className="h-full w-auto aspect-square rounded-full object-cover object-center"
+          />
+        </span>
 
         <div className="mt-10 h-px w-56 overflow-hidden bg-border md:w-72">
           <div

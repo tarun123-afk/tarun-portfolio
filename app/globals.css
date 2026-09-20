@@ -112,7 +112,7 @@
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee 28s linear infinite;
+  animation: marquee 35s linear infinite;
 }
 @keyframes marquee {
   from { transform: translateX(0); }

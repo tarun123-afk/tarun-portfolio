@@ -61,9 +61,9 @@ components/
 
 ## 3. Adding your 5 remaining videos
 
-There are **5 reserved slots** in `lib/site.ts`. They render as clean
-"In production" cards until you fill them in. Pick **one** of the two
-routes below.
+All six slots in `lib/site.ts` are now filled. To add a **new** project,
+append another object to the `works` array — the grid reflows on its own.
+Pick **one** of the two routes below.
 
 ### Route A — Compress and host in the repo (simplest)
 
@@ -77,6 +77,9 @@ clip went from **19MB → 722KB** with no visible quality loss, so your
 - macOS: `brew install ffmpeg`
 
 **Step 2 — compress each video**
+
+> **Always keep the audio stream.** Use `-c:a aac -b:a 128k -ac 2`.
+> Passing `-an` strips the sound and the unmute button will do nothing.
 
 Vertical (Reels / 4:5 / 9:16):
 
@@ -106,9 +109,9 @@ ffmpeg -i public/videos/my-project.mp4 -ss 3 -vframes 1 -q:v 3 \
 
 Pick a `-ss` timestamp on a strong frame, not a fade-to-black.
 
-**Step 4 — fill the slot in `lib/site.ts`**
+**Step 4 — add the entry in `lib/site.ts`**
 
-Replace one of the `slot-*` entries:
+Append to the `works` array:
 
 ```ts
 {
@@ -124,8 +127,10 @@ Replace one of the `slot-*` entries:
 },
 ```
 
-Set `status: "published"` — that's the switch that turns a reserved card
-into a real one. Repeat for all five, then `git add . && git commit && git push`.
+Set `ratio` to the video's true aspect (`"16/9"`, `"4/5"`, `"1/1"` or
+`"9/16"`). Landscape clips fill the card frame; vertical and square clips
+are fitted inside it so nothing gets cropped. Then
+`git add . && git commit && git push`.
 
 ### Route B — Host externally (if a file still won't compress small enough)
 
@@ -147,11 +152,6 @@ poster: "/images/my-project-poster.jpg",
 ```
 
 Keep the poster local so it loads instantly.
-
-### Route C — More than 6 projects
-
-Add more objects to the `works` array in `lib/site.ts`. The grid reflows
-automatically; no component changes needed.
 
 > **Note:** don't use a plain Instagram or YouTube page link as `video` —
 > those are web pages, not video files. You need a direct `.mp4` URL.
