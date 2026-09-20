@@ -1,68 +1,40 @@
-"use client"
 import Link from "next/link"
-import { Instagram } from "lucide-react"
-
-const socialLinks = [
-  { href: "https://instagram.com/Tarun66985", icon: Instagram, label: "Instagram @Tarun66985" },
-]
+import { Instagram, Mail } from "lucide-react"
+import { site } from "@/lib/site"
 
 const footerLinks = [
-  { href: "/", label: "Home" },
+  { href: "#work", label: "Work" },
   { href: "#about", label: "About" },
-  { href: "#works", label: "Works" },
-  { href: "#insights", label: "Insights" },
+  { href: "#process", label: "Process" },
   { href: "#contact", label: "Contact" },
 ]
 
 export function Footer() {
   return (
     <footer className="border-t border-border">
-      <div className="max-w-[1280px] mx-auto px-6 md:px-12 py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <Link href="/" className="text-xl font-semibold tracking-tight">
-              Tarun
+      <div
+        className="mx-auto max-w-[1280px] px-6 py-14 md:px-12 md:py-20"
+        style={{ paddingBottom: "calc(3.5rem + env(safe-area-inset-bottom, 0px))" }}
+      >
+        <div className="grid gap-10 md:grid-cols-3">
+          <div className="md:col-span-1">
+            <Link href="/" className="flex items-center gap-3">
+              <img src="/T.png" alt="" className="h-8 w-auto" />
+              <span className="text-xl font-semibold tracking-tight">{site.name}</span>
             </Link>
-            <p className="mt-4 text-muted-foreground text-sm max-w-xs leading-relaxed">
-              Cinematic video editor crafting raw, story-driven edits — color, sound, and rhythm cut into
-              something unforgettable.
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
+              {site.role} — motion graphics, 3D product animation and typography-led edits.
             </p>
-            <div className="flex items-center gap-4 mt-6">
-              {socialLinks.map((social) => (
-                <Link
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-secondary transition-colors hover:bg-opacity-10"
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#203eec20")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "")}
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-4 h-4" style={{ color: "#203eec" }} />
-                </Link>
-              ))}
-            </div>
-            <div className="mt-4">
-              <Link
-                href="mailto:tarunkumarkps66@gmail.com"
-                className="text-sm transition-colors hover:underline"
-                style={{ color: "#203eec" }}
-              >
-                tarunkumarkps66@gmail.com
-              </Link>
-            </div>
           </div>
-          {/* Pages */}
+
           <div>
-            <h4 className="text-sm font-semibold mb-4">Pages</h4>
+            <h4 className="mb-4 text-sm font-semibold">Pages</h4>
             <ul className="space-y-3">
               {footerLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {link.label}
                   </Link>
@@ -70,47 +42,42 @@ export function Footer() {
               ))}
             </ul>
           </div>
-          {/* Newsletter */}
+
           <div>
-            <h4 className="text-sm font-semibold mb-4">Stay Updated</h4>
-            <p className="text-sm text-muted-foreground mb-4">Get new edits and updates directly to your inbox.</p>
-            <form className="flex flex-col gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="px-4 py-2.5 text-sm bg-secondary rounded-lg border-0 focus:ring-2 outline-none"
-                style={{ ["--tw-ring-color" as any]: "#203eec" }}
-              />
-              <button
-                type="submit"
-                className="px-4 py-2.5 text-sm font-medium text-white rounded-lg transition-all relative overflow-hidden"
-                style={{
-                  background: "linear-gradient(135deg, #203eec 0%, #00d4ff 100%)",
-                  boxShadow: "0 4px 20px rgba(32, 62, 236, 0.3)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "0 8px 30px rgba(32, 62, 236, 0.5), 0 0 40px rgba(0, 212, 255, 0.3)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "0 4px 20px rgba(32, 62, 236, 0.3)"
-                }}
-              >
-                Subscribe
-              </button>
-            </form>
+            <h4 className="mb-4 text-sm font-semibold">Get in touch</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href={`mailto:${site.email}`}
+                  className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <Mail className="h-4 w-4" />
+                  {site.email}
+                </Link>
+              </li>
+              {[site.instagram.work, site.instagram.main].map((ig) => (
+                <li key={ig.handle}>
+                  <Link
+                    href={ig.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <Instagram className="h-4 w-4" />
+                    {ig.handle}
+                    <span className="text-xs opacity-70">{ig.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-        {/* Bottom */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-16 pt-8 border-t border-border">
-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Tarun. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Terms of Service
-            </Link>
-          </div>
+
+        <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-border pt-8 md:flex-row">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} {site.name}. All rights reserved.
+          </p>
+          <p className="text-xs text-muted-foreground">Built with Next.js · Deployed on Vercel</p>
         </div>
       </div>
     </footer>

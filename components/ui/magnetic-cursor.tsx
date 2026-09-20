@@ -2,13 +2,14 @@
 
 import { useEffect, useRef } from "react"
 
+/** Desktop-only custom cursor: a solid dot plus a lagging ring that grows on interactive elements. */
 export function MagneticCursor() {
   const dotRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Skip on touch devices — a synthetic cursor doesn't make sense there.
     if (window.matchMedia("(pointer: coarse)").matches) return
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
 
     const dot = dotRef.current
     const ring = ringRef.current
@@ -26,9 +27,6 @@ export function MagneticCursor() {
       dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`
     }
 
-    const onEnterInteractive = () => ring.classList.add("cursor-ring--active")
-    const onLeaveInteractive = () => ring.classList.remove("cursor-ring--active")
-
     const animateRing = () => {
       ringX += (mouseX - ringX) * 0.18
       ringY += (mouseY - ringY) * 0.18
@@ -36,22 +34,30 @@ export function MagneticCursor() {
       raf = requestAnimationFrame(animateRing)
     }
 
-    window.addEventListener("mousemove", onMove)
-    raf = requestAnimationFrame(animateRing)
+    // Delegated so elements added later (or re-rendered) still trigger the ring.
+    const onOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target?.closest("a, button, [role='button'], input, video")) {
+        ring.classList.add("cursor-ring--active")
+      }
+    }
+    const onOut = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target?.closest("a, button, [role='button'], input, video")) {
+        ring.classList.remove("cursor-ring--active")
+      }
+    }
 
-    const interactiveEls = document.querySelectorAll("a, button, [role='button']")
-    interactiveEls.forEach((el) => {
-      el.addEventListener("mouseenter", onEnterInteractive)
-      el.addEventListener("mouseleave", onLeaveInteractive)
-    })
+    window.addEventListener("mousemove", onMove)
+    document.addEventListener("mouseover", onOver)
+    document.addEventListener("mouseout", onOut)
+    raf = requestAnimationFrame(animateRing)
 
     return () => {
       window.removeEventListener("mousemove", onMove)
+      document.removeEventListener("mouseover", onOver)
+      document.removeEventListener("mouseout", onOut)
       cancelAnimationFrame(raf)
-      interactiveEls.forEach((el) => {
-        el.removeEventListener("mouseenter", onEnterInteractive)
-        el.removeEventListener("mouseleave", onLeaveInteractive)
-      })
     }
   }, [])
 
@@ -59,21 +65,14 @@ export function MagneticCursor() {
     <>
       <div
         ref={dotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden h-1.5 w-1.5 rounded-full bg-white md:block"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden h-1.5 w-1.5 rounded-full bg-foreground md:block"
         style={{ willChange: "transform" }}
       />
       <div
         ref={ringRef}
-        className="cursor-ring pointer-events-none fixed left-0 top-0 z-[9998] hidden h-8 w-8 rounded-full border transition-[width,height] duration-200 md:block"
-        style={{ willChange: "transform", borderColor: "#203eec" }}
+        className="cursor-ring pointer-events-none fixed left-0 top-0 z-[9998] hidden h-8 w-8 rounded-full border transition-[width,height,background-color] duration-200 md:block"
+        style={{ willChange: "transform", borderColor: "hsl(var(--primary))" }}
       />
-      <style jsx global>{`
-        .cursor-ring--active {
-          width: 3rem;
-          height: 3rem;
-          background: rgba(32, 62, 236, 0.08);
-        }
-      `}</style>
     </>
   )
 }

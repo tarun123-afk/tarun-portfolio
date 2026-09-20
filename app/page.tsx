@@ -1,9 +1,9 @@
 import { Header } from "@/components/layout/header"
 import { Hero } from "@/components/sections/hero"
+import { Work } from "@/components/sections/work"
 import { About } from "@/components/sections/about"
-import { SelectedWorks } from "@/components/sections/selected-works"
-import { Insights } from "@/components/sections/insights"
-import { FinalCTA } from "@/components/sections/final-cta"
+import { Process } from "@/components/sections/process"
+import { Contact } from "@/components/sections/contact"
 import { Footer } from "@/components/layout/footer"
 
 export default function Home() {
@@ -12,10 +12,10 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <Work />
         <About />
-        <SelectedWorks />
-        <Insights />
-        <FinalCTA />
+        <Process />
+        <Contact />
       </main>
       <Footer />
     </>
